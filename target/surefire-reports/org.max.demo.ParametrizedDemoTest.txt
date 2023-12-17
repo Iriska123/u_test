@@ -1,7 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.max.demo.ParametrizedDemoTest
--------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 1, Skipped: 2, Time elapsed: 0.071 s <<< FAILURE! - in org.max.demo.ParametrizedDemoTest
-toUpperCase_ShouldGenerateTheExpectedUppercaseValueCSVFile{String, String}  Time elapsed: 0.007 s  <<< ERROR!
-org.junit.platform.commons.PreconditionViolationException: Classpath resource [/data.csv] does not exist
-
