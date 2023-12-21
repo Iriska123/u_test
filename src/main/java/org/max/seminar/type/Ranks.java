@@ -38,5 +38,10 @@ public enum Ranks {
         this.value = value;
     }
 
-
+    public static Ranks fromValue(int value) {
+        for (Ranks ranks : Ranks.values()) {
+            if (ranks.getValue() == value) return ranks;
+        }
+        throw new RuntimeException("Не известное value = " + value);
+    }
 }

@@ -1,6 +1,8 @@
 package org.max.seminar;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.max.seminar.exception.DeckEmptyException;
 import org.max.seminar.type.Ranks;
 import org.max.seminar.type.Suits;
@@ -48,26 +50,21 @@ public class CardsTest {
         Assertions.assertThrows(DeckEmptyException.class, deck::getCard);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3})
     @Order(2)
-    void nonEmptyDeck() throws DeckEmptyException {
+    void nonEmptyDeck(int num) throws DeckEmptyException {
         System.out.println("nonEmptyDeck");
-
+        addCards(num - 1);
         Card actual = deck.getCard();
         Assertions.assertEquals(card, actual);
-        Assertions.assertEquals(0, deck.getCards().size());
+        Assertions.assertEquals(num - 1, deck.getCards().size());
     }
 
-    @Test
-    @Order(3)
-    void nonEmptyDeckWithTwoCards() throws DeckEmptyException {
-        System.out.println("nonEmptyDeckWithTwoCards");
-        Card card2 = new Card(Ranks.TEN, Suits.CLUBS);
-        cards.add(card2);
-
-        Card actual = deck.getCard();
-        Assertions.assertEquals(card, actual);
-        Assertions.assertEquals(1, deck.getCards().size());
+    private void addCards(int num) {
+        for (int index = 0; index < num; index++) {
+            cards.add(new Card(Ranks.fromValue(num + 2), Suits.CLUBS));
+        }
     }
 
 }
