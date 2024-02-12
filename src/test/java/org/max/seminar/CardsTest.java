@@ -9,62 +9,83 @@ import org.max.seminar.type.Suits;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CardsTest {
 
-    static List<Card> cards;
-    static Deck deck;
-    static Card card;
-
-    @BeforeAll
-    static void beforeAll() {
-        System.out.println("BeforeAll");
-        cards = new ArrayList<>();
-        deck = new Deck(cards);
-    }
-
-    @BeforeEach
-    void clearCards() {
-        System.out.println("BeforeEach");
-        card = new Card(Ranks.SEVEN, Suits.DIAMONDS);
-        cards.add(card);
-    }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println("AfterEach");
-        cards.clear();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        System.out.println("AfterAll");
-    }
+    List<Card> cards = new ArrayList<>();
+    Card card;
+    Deck deck;
 
     @Test
     @Order(1)
-    void emptyDeck() {
-        cards.clear();
-        System.out.println("emptyDeck");
-        Assertions.assertThrows(DeckEmptyException.class, deck::getCard);
+    @DisplayName("Получение карты из колоды с одной картой.")
+    void getCardFromDeckOneCard() throws DeckEmptyException {
+        //given
+        card = new Card(Ranks.SEVEN, Suits.CLUBS);
+        cards.add(card);
+        deck = new Deck(cards);
+        //then
+        Assertions.assertEquals(1, deck.getCards().size());
+        //when
+        Card carsFromDeck = deck.getCard();
+        //then
+        Assertions.assertEquals(0, deck.getCards().size());
+        Assertions.assertEquals(card, carsFromDeck);
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Получение карт из колоды с двумя картой.")
+    void getCardFromDeckSeveralCards() throws DeckEmptyException {
+        //given
+        card = new Card(Ranks.SEVEN, Suits.CLUBS);
+        cards.add(card);
+        Card cardTwo = new Card(Ranks.ACE, Suits.DIAMONDS);
+        cards.add(cardTwo);
+        deck = new Deck(cards);
+        //then
+        Assertions.assertEquals(2, deck.getCards().size());
+        //when
+        Card carsFromDeck = deck.getCard();
+        //then
+        Assertions.assertEquals(1, deck.getCards().size());
+        Assertions.assertEquals(card, carsFromDeck);
+
+        //when
+        carsFromDeck = deck.getCard();
+        //then
+        Assertions.assertEquals(0, deck.getCards().size());
+        Assertions.assertEquals(cardTwo, carsFromDeck);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
-    @Order(2)
-    void nonEmptyDeck(int num) throws DeckEmptyException {
-        System.out.println("nonEmptyDeck");
-        addCards(num - 1);
-        Card actual = deck.getCard();
-        Assertions.assertEquals(card, actual);
-        Assertions.assertEquals(num - 1, deck.getCards().size());
+    @Order(3)
+    @DisplayName("Генерация колоды карт из параметров теста.")
+    @ValueSource(ints = {1, 2, 5, 52})
+    void getSomeCardsFromDeck(int num) throws DeckEmptyException {
+        //given
+        Card firstCard = generateDeck(num);
+        //then
+        Assertions.assertEquals(num, deck.getCards().size());
+        //when
+        Card cardFromDeck = deck.getCard();
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(num - 1, deck.getCards().size()),
+                () -> Assertions.assertEquals(firstCard, cardFromDeck)
+        );
     }
 
-    private void addCards(int num) {
-        for (int index = 0; index < num; index++) {
-            cards.add(new Card(Ranks.fromValue(num + 2), Suits.CLUBS));
+    private Card generateDeck(int num) {
+        Random random = new Random();
+        for (int idx = 0; idx < num; idx++) {
+            Card card = new Card(Ranks.fromValue(2 + random.nextInt(9)), Suits.fromValue(1 + random.nextInt(3)));
+            cards.add(card);
         }
+        deck = new Deck(cards);
+        return cards.get(0);
     }
 
 }

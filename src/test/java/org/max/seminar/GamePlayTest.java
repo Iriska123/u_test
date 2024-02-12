@@ -21,6 +21,7 @@ public class GamePlayTest extends AbstractTest {
         game.getGamer().addCard(new Card(Ranks.TEN, Suits.CLUBS));
         //then
         Assertions.assertEquals(game.getGamer(), game.getWinner(game.getGamer(), game.getCasino()));
+        System.out.println("checkGamerWin21");
     }
 
     @Test
@@ -65,6 +66,7 @@ public class GamePlayTest extends AbstractTest {
 
     @AfterEach
     void newGame() {
+        System.out.println("Запуск после теста.");
         game.getGamer().newGame();
         game.getCasino().newGame();
     }

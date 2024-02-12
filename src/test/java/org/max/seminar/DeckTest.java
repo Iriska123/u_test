@@ -16,11 +16,13 @@ public class DeckTest {
 
     @BeforeAll
     static void init () {
+        System.out.println("Запуск инициализации.");
         deckService = new DeckService();
     }
 
     @BeforeEach
     void createNewDeck () {
+        System.out.println("Запуск перед тестом.");
         deck = new Deck(deckService.getNewDeck().getCards());
     }
 

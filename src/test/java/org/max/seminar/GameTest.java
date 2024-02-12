@@ -16,6 +16,9 @@ public class GameTest extends AbstractTest {
         //then
         Assertions.assertNotNull(game.getDeck());
         Assertions.assertEquals(52, game.getDeck().getCards().size());
+        Object obj1 = null;
+        Assertions.assertNull(obj1);
+        Assertions.assertNotNull(obj1);
     }
 
     @Test
@@ -36,5 +39,7 @@ public class GameTest extends AbstractTest {
         //then
         Assertions.assertTrue(game.getGamer().getHandSumm() > 0);
         Assertions.assertTrue(game.getCasino().getHandSumm() > 0);
+
+        Assertions.assertFalse(game.getGamer().getHandSumm() > 0);
     }
 }
