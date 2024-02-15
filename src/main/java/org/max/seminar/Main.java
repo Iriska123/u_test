@@ -5,40 +5,43 @@ import org.max.seminar.provider.NewsPaper;
 import org.max.seminar.provider.YandexNews;
 import org.max.seminar.subscriber.Subscriber;
 import org.max.seminar.subscriber.SubscriberImpl;
-import org.max.seminar.subscriber.SubscriberMember;
 
 public class Main {
 
     public static void main(String[] args) {
-        NewsPaper yandex = new YandexNews();
         NewsPaper mail = new MailNews();
+        NewsPaper yandex = new YandexNews();
 
-        SubscriberImpl subscriber1 = new SubscriberImpl("Иван");
-        SubscriberImpl subscriberYandex = new SubscriberImpl("Николай");
-        SubscriberImpl subscriberMail1 = new SubscriberImpl("Олег");
-        SubscriberImpl subscriberMail2 = new SubscriberImpl("Оля");
+        Subscriber yandexSubscriber1 = new SubscriberImpl("Yandex Subscriber Number 1");
+        Subscriber yandexSubscriber2 = new SubscriberImpl("Yandex Subscriber Number 2");
 
-        SubscriberMember subscriberMember = new SubscriberMember();
+        Subscriber mailSubscriber1 = new SubscriberImpl("Mail Subscriber Number 1");
+        Subscriber mailSubscriber2 = new SubscriberImpl("Mail Subscriber Number 2");
 
-        yandex.registerSubscriber(subscriber1);
-        mail.registerSubscriber(subscriber1);
+        Subscriber subscriber = new SubscriberImpl("Yandex and Mail subscriber");
 
-        yandex.registerSubscriber(subscriberYandex);
-        yandex.registerSubscriber(subscriberMember);
+        mail.registerSubscriber(subscriber);
+        mail.registerSubscriber(mailSubscriber1);
+        mail.registerSubscriber(mailSubscriber2);
 
-        mail.registerSubscriber(subscriberMail1);
-        mail.registerSubscriber(subscriberMail2);
+        yandex.registerSubscriber(subscriber);
+        yandex.registerSubscriber(yandexSubscriber1);
+        yandex.registerSubscriber(yandexSubscriber2);
 
-        yandex.notifySubscribers("Яндекс выпустил новые карты");
-        mail.notifySubscribers("Идёт новый циклон");
-        System.out.println(subscriberMember.getNews());
+        mail.notifySubscribers("Надвигается плохая погода.");
+        yandex.notifySubscribers("Яндекс выпустил новые карты.");
+        System.out.println("\n");
 
-        mail.unsubscribe(subscriberMail2);
+        mail.unsubscribe(mailSubscriber2);
+        yandex.unsubscribe(yandexSubscriber1);
 
-        mail.notifySubscribers("Циклон покинул наш регион");
-        System.out.println(subscriberMember.getNews());
+        mail.notifySubscribers("Надвигается хорошая погода.");
+        yandex.notifySubscribers("Яндекс обновил карты снова.");
+        System.out.println("\n");
 
-        yandex.notifySubscribers("Зима будет снежной");
-        System.out.println(subscriberMember.getNews());
+        mail.registerSubscriber(yandexSubscriber2);
+
+        mail.notifySubscribers("Надвигается ну очень хорошая погода.");
     }
+
 }

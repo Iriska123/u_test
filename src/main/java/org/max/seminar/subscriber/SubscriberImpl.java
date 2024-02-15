@@ -10,6 +10,6 @@ public class SubscriberImpl implements Subscriber {
 
     @Override
     public void updateSubscriber(String news) {
-        System.out.println("Подпсичик " + name + " узнал новость. " + news);
+        System.out.println("Подписчик " + name + " узнал новость. " + news);
     }
 }

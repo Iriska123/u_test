@@ -5,8 +5,9 @@ import org.max.seminar.subscriber.Subscriber;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractNews implements NewsPaper {
-    List<Subscriber> subscriberList = new ArrayList<>();
+public abstract class AbstractPaperImpl implements NewsPaper {
+
+    private List<Subscriber> subscriberList = new ArrayList<>();
 
     @Override
     public void registerSubscriber(Subscriber subscriber) {
@@ -24,4 +25,5 @@ public abstract class AbstractNews implements NewsPaper {
             subscriber.updateSubscriber(news);
         }
     }
+
 }
