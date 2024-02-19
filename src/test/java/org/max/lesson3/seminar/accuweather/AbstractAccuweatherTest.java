@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-abstract public class AccuweatherAbstractTest {
+public class AbstractAccuweatherTest {
 
-    static Properties prop = new Properties();
+    private static Properties prop = new Properties();
+
     private static InputStream configFile;
+
     private static String apiKey;
+
     private static String baseUrl;
 
     @BeforeAll

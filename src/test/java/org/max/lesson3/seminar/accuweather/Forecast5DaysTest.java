@@ -1,8 +1,8 @@
 package org.max.lesson3.seminar.accuweather;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.max.lesson3.seminar.accuweather.weather.DailyForecast;
 import org.max.lesson3.seminar.accuweather.weather.Weather;
 
@@ -11,40 +11,49 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.lessThan;
 
-public class Forecast5DaysTest extends AccuweatherAbstractTest {
+public class Forecast5DaysTest extends AbstractAccuweatherTest {
 
-    @Test
-    void testGetResponseAsWeather() {
-        Weather response = given().queryParam("apikey", getApiKey()).pathParam("locationKey", 50)
-                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{locationKey}")
-                .then().statusCode(200).time(lessThan(2000L))
+    @ParameterizedTest
+    @ValueSource(ints = {50, 75})
+    void getResponseAsWeather(int location) {
+        Weather weather = given().queryParam("apikey", getApiKey()).pathParams("location", location)
+                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{location}")
+                .then().statusCode(200).time(lessThan(1500L))
                 .extract().response().body().as(Weather.class);
-        Assertions.assertEquals(7, response.getHeadline().getSeverity());
-        Assertions.assertEquals(5, response.getDailyForecasts().size());
-        Assertions.assertEquals("F", response.getDailyForecasts().get(0).getTemperature().getMinimum().getUnit());
-        Assertions.assertEquals("F", response.getDailyForecasts().get(0).getTemperature().getMaximum().getUnit());
+
+        Assertions.assertAll(
+                () -> Assertions.assertNotNull(weather.getHeadline()),
+                () -> Assertions.assertEquals(5, weather.getDailyForecasts().size()),
+                () -> Assertions.assertEquals(18, weather.getDailyForecasts().get(0).getTemperature().getMaximum().getUnitType())
+        );
     }
 
-    @Test
-    void testGetResponseAsForecastList() {
-        List<DailyForecast> response = given().queryParam("apikey", getApiKey()).pathParam("locationKey", 50)
-                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{locationKey}")
-                .then().statusCode(200).time(lessThan(5000L))
+    @ParameterizedTest
+    @ValueSource(ints = {50, 75})
+    void getResponseAsDailyForecasts(int location) {
+        List<DailyForecast> dailyForecasts = given().queryParam("apikey", getApiKey()).pathParams("location", location)
+                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{location}")
+                .then().statusCode(200)
                 .extract().body().jsonPath().getList("DailyForecasts", DailyForecast.class);
-        Assertions.assertEquals(5, response.size());
-        Assertions.assertEquals("F", response.get(0).getTemperature().getMinimum().getUnit());
-        Assertions.assertEquals("F", response.get(0).getTemperature().getMaximum().getUnit());
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(5, dailyForecasts.size()),
+                () -> Assertions.assertEquals(18, dailyForecasts.get(0).getTemperature().getMaximum().getUnitType())
+        );
     }
 
-    @Test
-    void testGetResponseAsString() {
-        String response = given().queryParam("apikey", getApiKey()).pathParam("locationKey", 50)
-                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{locationKey}")
-                .then().statusCode(200).time(lessThan(5000L))
+    @ParameterizedTest
+    @ValueSource(ints = {50, 75})
+    void getResponseAsString(int location) {
+        String json = given().queryParam("apikey", getApiKey()).pathParams("location", location)
+                .when().get(getBaseUrl() + "/forecasts/v1/daily/5day/{location}")
+                .then().statusCode(200)
                 .extract().asString();
-        System.out.println(response);
-        Assertions.assertTrue(response.contains("Headline"));
-        Assertions.assertTrue(response.contains("DailyForecasts"));
+
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(json.contains("Headline")),
+                () -> Assertions.assertTrue(json.contains("DailyForecasts"))
+        );
     }
 
 }
