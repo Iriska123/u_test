@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeTest extends AbstractTest {
 
@@ -37,7 +38,7 @@ public class EmployeeTest extends AbstractTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"1, Менеджер", "2, Главный Менеджер"})
+    @CsvSource({"1, Менеджер", "2, Главный Менеджер", "3, Главный Технолог", "4, Главный Инженер"})
     void getEmployeeById_whenValid_shouldReturn(int id, String portion) throws SQLException {
         //given
         //when
@@ -53,14 +54,15 @@ public class EmployeeTest extends AbstractTest {
     }
 
     @Test
-    void getEmployees_Using_Hybernate_Only() {
-        //given
-        //when
-        final Query query = getSession().createQuery("from EmployeeEntity");
-        List<EmployeeEntity> list = query.list();
-        Assertions.assertAll(() -> Assertions.assertEquals(3, list.size())
-                , () -> Assertions.assertEquals("Кирил", list.get(0).getFirstName())
-                , () -> Assertions.assertEquals("Главный Менеджер", list.get(1).getPortion())
-                , () -> Assertions.assertEquals("+7 900 000003", list.get(2).getPhoneNumber()));
+    void getEngineers() {
+        String sql = "SELECT * FROM employee WHERE portion = 'Инженер'";
+        final Query query = getSession().createSQLQuery(sql).addEntity(EmployeeEntity.class);
+        List<EmployeeEntity> employeeEntityList = query.list();
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, employeeEntityList.size()),
+                () -> Assertions.assertEquals("Инженер", employeeEntityList.get(0).getPortion()),
+                () -> Assertions.assertEquals("Инженер", employeeEntityList.get(1).getPortion())
+        );
     }
+
 }

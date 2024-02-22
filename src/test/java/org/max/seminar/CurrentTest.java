@@ -44,6 +44,14 @@ public class CurrentTest extends AbstractTest {
         session.persist(entity);
         //then
         Assertions.assertThrows(PersistenceException.class, () -> session.getTransaction().commit());
-        ;
+
+        //when
+        final Query query = getSession().createSQLQuery("SELECT * FROM current").addEntity(CurrentEntity.class);
+        CurrentEntity currentEntity = (CurrentEntity) query.uniqueResult();
+        //then
+        Assertions.assertEquals(1, query.list().size());
+        Assertions.assertEquals(1, currentEntity.getCurrentId());
+        Assertions.assertEquals("2000 rub", currentEntity.getBalance());
+        Assertions.assertEquals(2, currentEntity.getClient());
     }
 }
