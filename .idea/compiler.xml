@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="JavaRepo" />
         <module name="Vvedenie_v_avtomation_testing" />
+        <module name="auto" />
       </profile>
     </annotationProcessing>
   </component>
