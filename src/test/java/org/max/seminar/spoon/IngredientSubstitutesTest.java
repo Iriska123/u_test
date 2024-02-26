@@ -16,6 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IngredientSubstitutesTest extends AbstractTest {
@@ -67,10 +68,10 @@ public class IngredientSubstitutesTest extends AbstractTest {
         //then
 
         verify(2, getRequestedFor(urlPathEqualTo("/food/ingredients/substitutes")));
-        assertEquals(200, responseOk.getStatusLine().getStatusCode());
-        assertEquals(200, responseError.getStatusLine().getStatusCode());
-        assertEquals("OK", mapper.readValue(responseOk.getEntity().getContent(), IngredientSubstitutesDto.class).getStatus());
-        assertEquals("Error", mapper.readValue(responseError.getEntity().getContent(), IngredientSubstitutesDto.class).getStatus());
+        assertAll(() -> assertEquals(200, responseOk.getStatusLine().getStatusCode()),
+                () -> assertEquals(200, responseError.getStatusLine().getStatusCode()),
+                () -> assertEquals("OK", mapper.readValue(responseOk.getEntity().getContent(), IngredientSubstitutesDto.class).getStatus()),
+                () -> assertEquals("Error", mapper.readValue(responseError.getEntity().getContent(), IngredientSubstitutesDto.class).getStatus()));
     }
 
     @Test
