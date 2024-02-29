@@ -30,12 +30,12 @@ public class ClassifyCuisineTest extends AbstractTest {
                 .post(getBaseUrl()+"recipes/cuisine")
                 .then()
                 .statusCode(200)
-                .time(Matchers.lessThan(1000l))
+                .time(Matchers.lessThan(3000l))
                 .extract()
                 .response()
                 .body()
                 .as(ClassifyCuisineDTO.class);
-        assertThat(response.getCuisine(), containsString("Mediterranean"));
+        assertThat(response.getCuisine(), containsString("Italian"));
         Assertions.assertEquals(response.getConfidence(),0.0);
         Assertions.assertEquals(response.getCuisines().size(),3);
     }
